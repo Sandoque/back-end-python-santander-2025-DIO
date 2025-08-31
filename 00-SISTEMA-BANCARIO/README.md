@@ -21,7 +21,7 @@ Como Usar
 *   **Execute o programa** rodando o arquivo Python:
     
 
-python banco.py
+sistema_bancario.py
 
 *   **Siga as instruções do menu exibido**:
     
