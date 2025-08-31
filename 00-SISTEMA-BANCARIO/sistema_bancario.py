@@ -1,4 +1,5 @@
 import datetime
+import textwrap
 
 def exibir_menu():
     print("\n" + "="*40)
@@ -7,6 +8,9 @@ def exibir_menu():
     print("[d] Depositar")
     print("[s] Sacar")
     print("[e] Extrato")
+    print("[nu] Novo usuário")
+    print("[nc] Nova conta")
+    print("[lc] Listar contas")
     print("[q] Sair")
     print("="*40)
 
@@ -66,27 +70,73 @@ def exibir_extrato(transacoes, saldo):
     print(f"\nSaldo atual: R$ {saldo:.2f}")
     print("=============================")
 
+def criar_usuario(usuarios):
+    cpf = input("Informe o CPF (somente número): ").strip()
+    usuario = filtrar_usuario(cpf, usuarios)
+    if usuario:
+        print("\n@@@ Já existe usuário com esse CPF! @@@")
+        return
+    nome = input("Informe o nome completo: ").strip()
+    data_nascimento = input("Informe a data de nascimento (dd-mm-aaaa): ").strip()
+    endereco = input("Informe o endereço (logradouro, nro - bairro - cidade/sigla estado): ").strip()
+    usuarios.append({"nome": nome, "data_nascimento": data_nascimento, "cpf": cpf, "endereco": endereco})
+    print("\n=== Usuário criado com sucesso! ===")
+
+def filtrar_usuario(cpf, usuarios):
+    usuarios_filtrados = [usuario for usuario in usuarios if usuario["cpf"] == cpf]
+    return usuarios_filtrados[0] if usuarios_filtrados else None
+
+def criar_conta(agencia, numero_conta, usuarios, contas):
+    cpf = input("Informe o CPF do usuário: ").strip()
+    usuario = filtrar_usuario(cpf, usuarios)
+    if usuario:
+        print("\n=== Conta criada com sucesso! ===")
+        conta = {"agencia": agencia, "numero_conta": numero_conta, "usuario": usuario}
+        contas.append(conta)
+    else:
+        print("\n@@@ Usuário não encontrado, fluxo de criação de conta encerrado! @@@")
+
+def listar_contas(contas):
+    if not contas:
+        print("\nNenhuma conta cadastrada.")
+        return
+    for conta in contas:
+        linha = f"""\
+            Agência:\t{conta['agencia']}
+            C/C:\t\t{conta['numero_conta']}
+            Titular:\t{conta['usuario']['nome']}
+        """
+        print("=" * 40)
+        print(textwrap.dedent(linha))
+
 def main():
     saldo = 0
     limite = 500
     transacoes = []
     numero_saques = 0
     LIMITE_SAQUES = 3
-
+    AGENCIA = "0001"
+    usuarios = []
+    contas = []
     print("="*40)
     print("Bem-vindo ao Banco Python!".center(40))
     print("="*40)
-
     while True:
         exibir_menu()
         opcao = obter_opcao()
-
         if opcao == "d":
             saldo = depositar(saldo, transacoes)
         elif opcao == "s":
             saldo, numero_saques = sacar(saldo, transacoes, numero_saques, limite, LIMITE_SAQUES)
         elif opcao == "e":
             exibir_extrato(transacoes, saldo)
+        elif opcao == "nu":
+            criar_usuario(usuarios)
+        elif opcao == "nc":
+            numero_conta = len(contas) + 1
+            criar_conta(AGENCIA, numero_conta, usuarios, contas)
+        elif opcao == "lc":
+            listar_contas(contas)
         elif opcao == "q":
             print("\nObrigado por usar o Banco Python. Até logo!")
             break
