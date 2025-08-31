@@ -66,4 +66,4 @@ Mensagens claras, organização de telas, e código pronto para expansão com no
 👨‍💻 Créditos
 --------------
 
-Projeto por Antônio, adaptado e aprimorado com foco em boas práticas de Python POO.
+Projeto por Antônio Carlos Sandoque, adaptado e aprimorado com foco em boas práticas de Python POO.
